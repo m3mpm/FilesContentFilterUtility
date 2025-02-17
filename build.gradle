@@ -17,3 +17,13 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.m3mpm.Main' // Путь до основного класса
+        )
+    }
+    archiveBaseName.set('util') // Имя JAR-файла
+    archiveVersion.set('') // Необходимо указать, чтобы получить просто util.jar, без версии
+}
