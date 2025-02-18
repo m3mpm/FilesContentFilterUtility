@@ -33,50 +33,54 @@ public class Main {
                 }
             }
 
+            if(!inputFiles.isEmpty()) {
+                // Создание пути и имен выходных файлов
+                String integersFile = Paths.get(outputPath, prefix + "integers.txt").normalize().toString();
+                String floatsFile = Paths.get(outputPath, prefix + "floats.txt").normalize().toString();
+                String stringsFile = Paths.get(outputPath, prefix + "strings.txt").normalize().toString();
 
-            // Создание пути и имен выходных файлов
-            String integersFile = Paths.get(outputPath, prefix + "integers.txt").normalize().toString();
-            String floatsFile = Paths.get(outputPath, prefix + "floats.txt").normalize().toString();
-            String stringsFile = Paths.get(outputPath, prefix + "strings.txt").normalize().toString();
 
+                // Создание BufferedWriter для записи
+                try(BufferedWriter intWriter = new BufferedWriter(new FileWriter(integersFile));
+                    BufferedWriter floatWriter = new BufferedWriter(new FileWriter(floatsFile));
+                    BufferedWriter stringWriter = new BufferedWriter(new FileWriter(stringsFile))) {
 
-            // Создание BufferedWriter для записи
-            try(BufferedWriter intWriter = new BufferedWriter(new FileWriter(integersFile));
-                BufferedWriter floatWriter = new BufferedWriter(new FileWriter(floatsFile));
-                BufferedWriter stringWriter = new BufferedWriter(new FileWriter(stringsFile))) {
+                    // Чтение каждого входного файла
+                    for (String inputFile : inputFiles) {
+                        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
 
-                // Чтение каждого входного файла
-                for (String inputFile : inputFiles) {
-                    try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+                            // Чтение каждой строки в файле
+                            String line;
+                            while ((line = reader.readLine()) != null) {
 
-                        // Чтение каждой строки в файле
-                        String line;
-                        while ((line = reader.readLine()) != null) {
+                                // Пропускаем пустые строки
+                                line = line.trim();
+                                if (line.isEmpty()) continue;
 
-                            // Пропускаем пустые строки
-                            line = line.trim();
-                            if (line.isEmpty()) continue;
-
-                            // Определение типа данных и запись в файл
-                            if(line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
-                                floatWriter.write(line);
-                                floatWriter.newLine();
-                            } else if (line.matches("[-+]?\\d+")) { // Целое число
-                                intWriter.write(line);
-                                intWriter.newLine();
-                            } else { // Строка
-                                stringWriter.write(line);
-                                stringWriter.newLine();
+                                // Определение типа данных и запись в файл
+                                if(line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
+                                    floatWriter.write(line);
+                                    floatWriter.newLine();
+                                } else if (line.matches("[-+]?\\d+")) { // Целое число
+                                    intWriter.write(line);
+                                    intWriter.newLine();
+                                } else { // Строка
+                                    stringWriter.write(line);
+                                    stringWriter.newLine();
+                                }
                             }
-                        }
-                    } catch (IOException e) {
-                        System.err.println("ERROR: Ошибка при чтении файла: " + inputFile);
+                        } catch (IOException e) {
+                            System.err.println("ERROR: Ошибка при чтении файла: " + inputFile);
 //                        e.printStackTrace();
+                        }
                     }
-                }
-            }  catch (IOException e) {
-                System.err.println("ERROR: Ошибка при создании выходных файлов");
+                }  catch (IOException e) {
+                    System.err.println("ERROR: Ошибка при создании выходных файлов");
 //                e.printStackTrace();
+                }
+
+            } else {
+                System.err.println("ERROR: Входные файлы не указаны!");
             }
 
         } else {
