@@ -39,12 +39,12 @@ public class Main {
                 String floatsFile = Paths.get(outputPath, prefix + "floats.txt").normalize().toString();
                 String stringsFile = Paths.get(outputPath, prefix + "strings.txt").normalize().toString();
 
-
                 // Создание BufferedWriter для записи
-                try(BufferedWriter intWriter = new BufferedWriter(new FileWriter(integersFile));
-                    BufferedWriter floatWriter = new BufferedWriter(new FileWriter(floatsFile));
-                    BufferedWriter stringWriter = new BufferedWriter(new FileWriter(stringsFile))) {
+                BufferedWriter intWriter = null;
+                BufferedWriter floatWriter = null;
+                BufferedWriter stringWriter = null;
 
+                try {
                     // Чтение каждого входного файла
                     for (String inputFile : inputFiles) {
                         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
@@ -59,14 +59,47 @@ public class Main {
 
                                 // Определение типа данных и запись в файл
                                 if(line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
-                                    floatWriter.write(line);
-                                    floatWriter.newLine();
+                                    if (floatWriter == null) {
+                                        try {
+                                            floatWriter = new BufferedWriter(new FileWriter(floatsFile));
+                                            floatWriter.write(line);
+                                            floatWriter.newLine();
+                                        }  catch (IOException e) {
+                                            System.err.println("ERROR: Ошибка при создании выходных файлов");
+                                            e.printStackTrace();
+                                        }
+                                    } else {
+                                        floatWriter.write(line);
+                                        floatWriter.newLine();
+                                    }
                                 } else if (line.matches("[-+]?\\d+")) { // Целое число
-                                    intWriter.write(line);
-                                    intWriter.newLine();
+                                    if (intWriter == null) {
+                                        try {
+                                            intWriter = new BufferedWriter(new FileWriter(integersFile));
+                                            intWriter.write(line);
+                                            intWriter.newLine();
+                                        }  catch (IOException e) {
+                                            System.err.println("ERROR: Ошибка при создании выходных файлов");
+                                            e.printStackTrace();
+                                        }
+                                    } else{
+                                        intWriter.write(line);
+                                        intWriter.newLine();
+                                    }
                                 } else { // Строка
-                                    stringWriter.write(line);
-                                    stringWriter.newLine();
+                                    if (stringWriter == null) {
+                                        try {
+                                            stringWriter = new BufferedWriter(new FileWriter(stringsFile));
+                                            stringWriter.write(line);
+                                            stringWriter.newLine();
+                                        }  catch (IOException e) {
+                                            System.err.println("ERROR: Ошибка при создании выходных файлов");
+                                            e.printStackTrace();
+                                        }
+                                    } else {
+                                        stringWriter.write(line);
+                                        stringWriter.newLine();
+                                    }
                                 }
                             }
                         } catch (IOException e) {
@@ -74,9 +107,16 @@ public class Main {
 //                        e.printStackTrace();
                         }
                     }
-                }  catch (IOException e) {
-                    System.err.println("ERROR: Ошибка при создании выходных файлов");
-//                e.printStackTrace();
+                }  finally {
+                    // Закрытие буферов, если они были созданы
+                    try {
+                        if (intWriter != null) intWriter.close();
+                        if (floatWriter != null) floatWriter.close();
+                        if (stringWriter != null) stringWriter.close();
+                    } catch (IOException e) {
+                        System.err.println("ERROR: Ошибка при закрытии файлов");
+                        e.printStackTrace();
+                    }
                 }
 
             } else {
