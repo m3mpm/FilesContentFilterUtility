@@ -1,9 +1,7 @@
 package org.m3mpm;
 
 
-import java.io.BufferedWriter;
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -19,6 +17,8 @@ public class Main {
             String outputPath = ".";
             String prefix = "";
             boolean writeMode = false;
+            boolean shortStatistics = false;
+            boolean fullStatistics = false;
 
             // Массив входных файлов
             List<String> inputFiles = new ArrayList<>();
@@ -31,6 +31,10 @@ public class Main {
                     prefix = args[++i];
                 } else if ("-a".equals(args[i])) {
                     writeMode = true;
+                } else if("-s".equals(args[i])) {
+                    shortStatistics = true;
+                } else if ("-f".equals(args[i])) {
+                    fullStatistics = true;
                 } else {
                     inputFiles.add(args[i]);
                 }
@@ -41,6 +45,11 @@ public class Main {
                 String integersFile = Paths.get(outputPath, prefix + "integers.txt").normalize().toString();
                 String floatsFile = Paths.get(outputPath, prefix + "floats.txt").normalize().toString();
                 String stringsFile = Paths.get(outputPath, prefix + "strings.txt").normalize().toString();
+
+                // Создание объектов для статистики
+                IntegerStatistics integerStatistics = new IntegerStatistics(shortStatistics, fullStatistics);
+                FloatStatistics floatStatistics = new FloatStatistics(shortStatistics, fullStatistics);
+                StringStatistics stringStatistics = new StringStatistics(shortStatistics, fullStatistics);
 
                 // Создание объекта DataWriter для записи в файлы
                 DataWriter  dataWriter = new DataWriter(integersFile, floatsFile, stringsFile, writeMode);
@@ -61,19 +70,27 @@ public class Main {
                                 // Определение типа данных и запись в файл
                                 if(line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
                                     dataWriter.writeToFile(line,"float");
+                                    floatStatistics.updateStatistics(line);
                                 } else if (line.matches("[-+]?\\d+")) { // Целое число
                                     dataWriter.writeToFile(line,"int");
+                                    integerStatistics.updateStatistics(line);
                                 } else { // Строка
                                     dataWriter.writeToFile(line,"string");
+                                    stringStatistics.updateStatistics(line);
                                 }
                             }
                         } catch (IOException e) {
                             System.err.println("ERROR: Ошибка при чтении файла: " + inputFile);
-//                        e.printStackTrace();
                         }
                     }
+
+                    // Вывод статистики
+                    integerStatistics.printStatistics();
+                    floatStatistics.printStatistics();
+                    stringStatistics.printStatistics();
+
                 }  finally {
-                    // Закрытие буферов, если они были созданы
+                    // Закрытие BufferedWriter
                     dataWriter.closeWriters();
                 }
 

@@ -48,7 +48,6 @@ public class DataWriter {
             }
         } catch (IOException e) {
             System.err.println("ERROR: Ошибка при записи в файл: " + type);
-//            e.printStackTrace();
         }
     }
 
@@ -59,7 +58,6 @@ public class DataWriter {
             if (stringWriter != null) stringWriter.close();
         } catch (IOException e) {
             System.err.println("ERROR: Ошибка при закрытии файлов");
-//            e.printStackTrace();
         }
     }
 }
