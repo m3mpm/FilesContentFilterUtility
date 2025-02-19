@@ -69,14 +69,17 @@ public class Main {
 
                                 // Определение типа данных и запись в файл
                                 if(line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
-                                    dataWriter.writeToFile(line,"float");
-                                    floatStatistics.updateStatistics(line);
+                                    if(!dataWriter.writeToFile(line,"float")){
+                                        floatStatistics.updateStatistics(line);
+                                    }
                                 } else if (line.matches("[-+]?\\d+")) { // Целое число
-                                    dataWriter.writeToFile(line,"int");
-                                    integerStatistics.updateStatistics(line);
+                                    if(!dataWriter.writeToFile(line,"int")){
+                                        integerStatistics.updateStatistics(line);
+                                    }
                                 } else { // Строка
-                                    dataWriter.writeToFile(line,"string");
-                                    stringStatistics.updateStatistics(line);
+                                    if(!dataWriter.writeToFile(line,"string")){
+                                        stringStatistics.updateStatistics(line);
+                                    }
                                 }
                             }
                         } catch (IOException e) {

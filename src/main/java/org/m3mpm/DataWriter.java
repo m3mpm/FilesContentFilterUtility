@@ -21,7 +21,8 @@ public class DataWriter {
         this.writeMode = writeMode;
     }
 
-    public void writeToFile(String line, String type) {
+    public boolean writeToFile(String line, String type) {
+        boolean hasError = false;
         try {
             switch (type) {
                 case "int":
@@ -46,8 +47,10 @@ public class DataWriter {
                     stringWriter.newLine();
                     break;
             }
+            return hasError;
         } catch (IOException e) {
             System.err.println("ERROR: Ошибка при записи в файл: " + type);
+            return hasError = true;
         }
     }
 
