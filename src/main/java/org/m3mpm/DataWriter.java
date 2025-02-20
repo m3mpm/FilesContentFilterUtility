@@ -21,8 +21,7 @@ public class DataWriter {
         this.writeMode = writeMode;
     }
 
-    public boolean writeToFile(String line, String type) {
-        boolean hasError = false;
+    public void writeToFile(String line, String type) throws DataWriterException {
         try {
             switch (type) {
                 case "int":
@@ -47,20 +46,18 @@ public class DataWriter {
                     stringWriter.newLine();
                     break;
             }
-            return hasError;
         } catch (IOException e) {
-            System.err.println("ERROR: Ошибка при записи в файл: " + type);
-            return hasError = true;
+            throw new DataWriterException("ERROR: Ошибка при записи в файл");
         }
     }
 
-    public void closeWriters() {
+    public void closeWriters() throws DataWriterException {
         try {
             if (intWriter != null) intWriter.close();
             if (floatWriter != null) floatWriter.close();
             if (stringWriter != null) stringWriter.close();
         } catch (IOException e) {
-            System.err.println("ERROR: Ошибка при закрытии файлов");
+            throw new DataWriterException("ERROR: Ошибка при закрытии файлов");
         }
     }
 }

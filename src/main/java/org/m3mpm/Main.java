@@ -54,6 +54,8 @@ public class Main {
                 // Создание объекта DataWriter для записи в файлы
                 DataWriter  dataWriter = new DataWriter(integersFile, floatsFile, stringsFile, writeMode);
 
+                boolean hasErrors = false;
+
                 try {
                     // Чтение каждого входного файла
                     for (String inputFile : inputFiles) {
@@ -68,33 +70,41 @@ public class Main {
                                 if (line.isEmpty()) continue;
 
                                 // Определение типа данных и запись в файл
-                                if(line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
-                                    if(!dataWriter.writeToFile(line,"float")){
-                                        floatStatistics.updateStatistics(line);
-                                    }
+                                if (line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
+                                    dataWriter.writeToFile(line, "float");
+                                    floatStatistics.updateStatistics(line);
                                 } else if (line.matches("[-+]?\\d+")) { // Целое число
-                                    if(!dataWriter.writeToFile(line,"int")){
-                                        integerStatistics.updateStatistics(line);
-                                    }
+                                    dataWriter.writeToFile(line, "int");
+                                    integerStatistics.updateStatistics(line);
                                 } else { // Строка
-                                    if(!dataWriter.writeToFile(line,"string")){
-                                        stringStatistics.updateStatistics(line);
-                                    }
+                                    dataWriter.writeToFile(line, "string");
+                                    stringStatistics.updateStatistics(line);
                                 }
                             }
+                        } catch (DataWriterException e){
+                            System.err.println(e.getMessage());
+                            hasErrors = true;
                         } catch (IOException e) {
                             System.err.println("ERROR: Ошибка при чтении файла: " + inputFile);
+                            hasErrors = true;
                         }
                     }
 
                     // Вывод статистики
-                    integerStatistics.printStatistics();
-                    floatStatistics.printStatistics();
-                    stringStatistics.printStatistics();
+                    if (hasErrors) {
+                        integerStatistics.printStatistics();
+                        floatStatistics.printStatistics();
+                        stringStatistics.printStatistics();
+                    }
 
                 }  finally {
                     // Закрытие BufferedWriter
-                    dataWriter.closeWriters();
+                    try{
+                        dataWriter.closeWriters();
+                    }
+                    catch (DataWriterException e){
+                        System.err.println(e.getMessage());
+                    }
                 }
 
             } else {
