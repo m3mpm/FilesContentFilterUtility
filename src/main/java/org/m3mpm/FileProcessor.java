@@ -39,35 +39,37 @@ public class FileProcessor {
         processArgs();
 
         if(!inputFiles.isEmpty()){
+            if(Files.isDirectory(Paths.get(outputPath))) {
+                // Создание пути и имен выходных файлов
+                String integersFile = Paths.get(outputPath, prefix + "integers.txt").normalize().toString();
+                String floatsFile = Paths.get(outputPath, prefix + "floats.txt").normalize().toString();
+                String stringsFile = Paths.get(outputPath, prefix + "strings.txt").normalize().toString();
 
-            // Создание пути и имен выходных файлов
-            String integersFile = Paths.get(outputPath, prefix + "integers.txt").normalize().toString();
-            String floatsFile = Paths.get(outputPath, prefix + "floats.txt").normalize().toString();
-            String stringsFile = Paths.get(outputPath, prefix + "strings.txt").normalize().toString();
+                // Создание объектов для статистики
+                integerStatistics = new IntegerStatistics(shortStatistics, fullStatistics);
+                floatStatistics = new FloatStatistics(shortStatistics, fullStatistics);
+                stringStatistics = new StringStatistics(shortStatistics, fullStatistics);
 
-            // Создание объектов для статистики
-            integerStatistics = new IntegerStatistics(shortStatistics, fullStatistics);
-            floatStatistics = new FloatStatistics(shortStatistics, fullStatistics);
-            stringStatistics = new StringStatistics(shortStatistics, fullStatistics);
+                // Создание объекта DataWriter для записи в файлы
+                dataWriter = new DataWriter(integersFile, floatsFile, stringsFile, writeMode);
 
-            // Создание объекта DataWriter для записи в файлы
-            dataWriter = new DataWriter(integersFile, floatsFile, stringsFile, writeMode);
+                processFiles();
 
-            processFiles();
+                // Вывод статистики
+                if (!hasErrors) {
+                    integerStatistics.printStatistics();
+                    floatStatistics.printStatistics();
+                    stringStatistics.printStatistics();
+                }
 
-            // Вывод статистики
-            if (!hasErrors) {
-                integerStatistics.printStatistics();
-                floatStatistics.printStatistics();
-                stringStatistics.printStatistics();
+                try {
+                    dataWriter.closeWriters();
+                } catch (DataWriterException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else {
+                System.err.println("ERROR: Неверно указан путь: " + outputPath);
             }
-
-            try {
-                dataWriter.closeWriters();
-            } catch (DataWriterException e) {
-                System.err.println(e.getMessage());
-            }
-
         } else {
             System.err.println("ERROR: Входные файлы не указаны!");
         }
