@@ -47,7 +47,7 @@ public class DataWriter {
                     break;
             }
         } catch (IOException e) {
-            throw new DataWriterException("ERROR: Ошибка при записи в файл");
+            throw new DataWriterException("ERROR: Ошибка при записи в файл: " + type);
         }
     }
 

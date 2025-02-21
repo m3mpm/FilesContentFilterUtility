@@ -6,12 +6,12 @@ public class Main {
         if (args.length > 0) {
             FileProcessor fileProcessor = new FileProcessor(args);
             try{
-                fileProcessor.processing();
+                fileProcessor.run();
             } catch (Exception e){
                 System.out.println(e.getMessage());
             }
         } else {
-            System.err.println("ERROR: Отсутствуют аргументы командной строки!");
+            System.out.println("ERROR: Отсутствуют аргументы командной строки!");
         }
     }
 }
