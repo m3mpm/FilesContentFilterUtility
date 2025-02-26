@@ -1,6 +1,9 @@
 package org.m3mpm;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 public class IntegerStatistics implements StatisticsInterface{
     private long count = 0;
@@ -39,14 +42,28 @@ public class IntegerStatistics implements StatisticsInterface{
             System.out.println("Статистика по целым числам:");
         }
         if (shortStatistics) {
-            System.out.println("Количество записей : " + count);
+            System.out.println("Количество записанных элементов: " + count);
         }
         if (fullStatistics) {
-            System.out.println("Количество записей: " + count);
+            System.out.println("Количество записанных элементов: " + count);
             System.out.println("Минимальное значение: " + min);
             System.out.println("Максимальное значение: " + max);
             System.out.println("Сумма: " + sum);
-            System.out.println("Среднее значение: " + (sum.divide(BigInteger.valueOf(count)))); // Пример деления (может потребоваться округление)
+            BigDecimal avrgDecimal = getAvrgDecimal();
+            System.out.println("Среднее значение: " + avrgDecimal); // Пример деления (может потребоваться округление)
         }
+    }
+
+    private BigDecimal getAvrgDecimal() {
+        BigDecimal sumDecimal = new BigDecimal(sum);
+        BigDecimal countDecimal = BigDecimal.valueOf(count);
+        int countDigitsInSum = String.valueOf(sum).length();
+        int countDigitsInCount = String.valueOf(count).length();
+        int  numberDigitsAfterPoint = 2;
+        int precision = Math.max(countDigitsInSum,countDigitsInCount) + numberDigitsAfterPoint;
+        MathContext mathContext = new MathContext(precision, RoundingMode.HALF_UP);
+        BigDecimal avrgDecimal = sumDecimal.divide(countDecimal, mathContext);
+        avrgDecimal = avrgDecimal.setScale(numberDigitsAfterPoint, RoundingMode.HALF_UP);
+        return avrgDecimal;
     }
 }

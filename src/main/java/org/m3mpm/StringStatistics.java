@@ -35,10 +35,10 @@ public class StringStatistics implements StatisticsInterface{
             System.out.println("Статистика по строкам:");
         }
         if (shortStatistics) {
-            System.out.println("Количество записей: " + count);
+            System.out.println("Количество записанных элементов: " + count);
         }
         if (fullStatistics) {
-            System.out.println("Количество записей: " + count);
+            System.out.println("Количество записанных элементов: " + count);
             System.out.println("Минимальная длина: " + minLength);
             System.out.println("Максимальная длина: " + maxLength);
         }
