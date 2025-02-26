@@ -1,15 +1,15 @@
 package org.m3mpm;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class IntegerStatistics implements StatisticsInterface{
     private long count = 0;
-    private BigInteger min = null;
-    private BigInteger max = null;
-    private BigInteger sum = BigInteger.ZERO;
+    private BigDecimal min = null;
+    private BigDecimal max = null;
+    private BigDecimal sum = BigDecimal.ZERO;
     private final boolean shortStatistics;
     private final boolean fullStatistics;
 
@@ -20,7 +20,7 @@ public class IntegerStatistics implements StatisticsInterface{
 
     @Override
     public void updateStatistics(String line) {
-        BigInteger value = new BigInteger(line);
+        BigDecimal value = new BigDecimal(line);
         count++;
         sum = sum.add(value);
         if (min == null && max == null) {
@@ -55,15 +55,11 @@ public class IntegerStatistics implements StatisticsInterface{
     }
 
     private BigDecimal getAvrgDecimal() {
-        BigDecimal sumDecimal = new BigDecimal(sum);
-        BigDecimal countDecimal = BigDecimal.valueOf(count);
-        int countDigitsInSum = String.valueOf(sum).length();
+        int countDigitsInSum = sum.precision();
         int countDigitsInCount = String.valueOf(count).length();
         int  numberDigitsAfterPoint = 2;
         int precision = Math.max(countDigitsInSum,countDigitsInCount) + numberDigitsAfterPoint;
         MathContext mathContext = new MathContext(precision, RoundingMode.HALF_UP);
-        BigDecimal avrgDecimal = sumDecimal.divide(countDecimal, mathContext);
-        avrgDecimal = avrgDecimal.setScale(numberDigitsAfterPoint, RoundingMode.HALF_UP);
-        return avrgDecimal;
+        return (sum.divide(BigDecimal.valueOf(count), mathContext));
     }
 }

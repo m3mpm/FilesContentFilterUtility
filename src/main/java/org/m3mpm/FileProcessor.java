@@ -3,6 +3,8 @@ package org.m3mpm;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -119,12 +121,19 @@ public class FileProcessor {
     private void processLine(String line) {
         try {
             // Определение типа данных и запись в файл
-            if (line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
+            if (line.matches("[-+]?\\d+(\\.\\d+)?[Ee][-+]?\\d+")) { // Число в экспоненциальном представлении
+                if (isInteger(line)){
+                    dataWriter.writeToFile(line, "int");
+                    integerStatistics.updateStatistics(line);
+                } else {
+                    dataWriter.writeToFile(line, "float");
+                    floatStatistics.updateStatistics(line);
+                }
+            } else if (line.matches("[-+]?\\d+\\.\\d+")) { // Вещественное число
                 dataWriter.writeToFile(line, "float");
                 floatStatistics.updateStatistics(line);
             } else if (line.matches("[-+]?\\d+")) { // Целое число
-                dataWriter.writeToFile(line, "int");
-                integerStatistics.updateStatistics(line);
+
             } else { // Строка
                 dataWriter.writeToFile(line, "string");
                 stringStatistics.updateStatistics(line);
@@ -133,6 +142,11 @@ public class FileProcessor {
             hasErrors = true;
             System.err.println(e.getMessage());
         }
+    }
+
+    private boolean isInteger(String line) {
+        BigDecimal number = new BigDecimal(line);
+        return number.setScale(0, RoundingMode.DOWN).compareTo(number) == 0;
     }
 
 }
