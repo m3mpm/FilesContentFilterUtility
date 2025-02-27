@@ -71,7 +71,7 @@ public class IntegerStatistics implements StatisticsInterface{
             System.out.println("Максимальное значение: " + max);
             System.out.println("Сумма: " + sum);
             BigDecimal avrgDecimal = getAvrgDecimal();
-            System.out.println("Среднее значение: " + avrgDecimal); // Пример деления (может потребоваться округление)
+            System.out.println("Среднее значение: " + avrgDecimal);
         }
     }
 

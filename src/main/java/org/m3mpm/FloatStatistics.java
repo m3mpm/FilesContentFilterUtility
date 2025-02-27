@@ -71,6 +71,11 @@ public class FloatStatistics implements StatisticsInterface{
         }
     }
 
+    /**
+     * Вычисляет среднее значение как BigDecimal с учетом необходимой точности.
+     *
+     * @return Среднее значение в формате BigDecimal.
+     */
     private BigDecimal getAvrgDecimal(){
         int countDigitsInSum = sum.precision();
         int countDigitsInCount = String.valueOf(count).length();
