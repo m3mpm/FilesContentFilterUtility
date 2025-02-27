@@ -32,7 +32,7 @@ public class FloatStatistics implements StatisticsInterface{
      * Обновляет статистику на основе входной строки, представляющей вещественное число.
      *
      * @param line Строка, содержащая вещественное число.
-     * @throws IllegalArgumentException если строка не может быть преобразована в BigDecimal.
+     * @throws NumberFormatException если строка не может быть преобразована в BigDecimal.
      */
     public void updateStatistics(String line) throws NumberFormatException {
         try {
