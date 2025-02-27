@@ -119,7 +119,9 @@ public class FileProcessor {
     private void processLine(String line) {
         try {
             // Определение типа данных и запись в файл
-            if (line.matches("[-+]?\\d*\\.\\d+[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) { // Научная нотация и Вещественное число
+
+            // Экспоненциальная запись числа и Вещественное число
+            if (line.matches("[-+]?\\d+(\\.\\d+)?[Ee][-+]?\\d+") || line.matches("[-+]?\\d+\\.\\d+")) {
                 dataWriter.writeToFile(line, "float");
                 floatStatistics.updateStatistics(line);
             } else if (line.matches("[-+]?\\d+")) { // Целое число
