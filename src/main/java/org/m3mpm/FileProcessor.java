@@ -8,6 +8,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * `FileProcessor` - класс для обработки файлов, который читает входные файлы, собирает статистику по данным
+ * и записывает результаты в выходные файлы.
+ */
 public class FileProcessor {
 
     // Аргументы командой строки
@@ -30,11 +35,21 @@ public class FileProcessor {
     // Объект для записи данных в файлы
     DataWriter  dataWriter = null;
 
-    // Конструктор
+    /**
+     * Конструктор класса `FileProcessor`.
+     *
+     * @param args аргументы командной строки, переданные при запуске программы
+     */
     public FileProcessor(String[] args) {
         this.args = args;
     }
 
+    /**
+     * Запускает процесс обработки файлов.
+     * Считывает аргументы, обрабатывает входные файлы и выводит статистику.
+     *
+     * @throws Exception если возникает ошибка во время обработки файлов
+     */
     public void run() throws Exception {
         processArgs();
 
@@ -75,6 +90,9 @@ public class FileProcessor {
         }
     }
 
+    /**
+     * Обрабатывает аргументы командной строки и устанавливает соответствующие параметры.
+     */
     private void processArgs(){
         for (int i = 0; i < args.length; i++) {
             if ("-o".equals(args[i]) && i + 1 < args.length) {
@@ -93,6 +111,9 @@ public class FileProcessor {
         }
     }
 
+    /**
+     * Обрабатывает входные файлы, считывая их по очереди и передавая строки для дальнейшей обработки.
+     */
     private void processFiles() {
         // Чтение каждого входного файла
         for (String inputFile : inputFiles) {
@@ -116,6 +137,11 @@ public class FileProcessor {
         }
     }
 
+    /**
+     * Обрабатывает строку, определяя ее тип и записывая данные в соответствующий файл
+     *
+     *  @param line строка, которую необходимо обработать
+    */
     private void processLine(String line) {
         try {
             // Определение типа данных и запись в файл

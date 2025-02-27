@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+/**
+ * Класс `FloatStatistics` предназначен для сбора и вывода статистических данных о вещественных числах,
+ * полученных в виде строк.  Он вычисляет количество, минимальное, максимальное значение, сумму и среднее значение.
+ * Поддерживает режимы краткой и полной статистики.
+ */
 public class FloatStatistics implements StatisticsInterface{
     private long count = 0;
     private BigDecimal min = null;
@@ -12,11 +17,23 @@ public class FloatStatistics implements StatisticsInterface{
     private final boolean shortStatistics;
     private final boolean fullStatistics;
 
+    /**
+     * Конструктор класса `FloatStatistics`.
+     *
+     * @param shortStatistics  Определяет, выводить ли краткую статистику (только количество).
+     * @param fullStatistics Определяет, выводить ли полную статистику (количество, минимум, максимум, сумму, среднее).
+     */
     public FloatStatistics(boolean shortStatistics, boolean fullStatistics) {
         this.shortStatistics = shortStatistics;
         this.fullStatistics = fullStatistics;
     }
 
+    /**
+     * Обновляет статистику на основе входной строки, представляющей вещественное число.
+     *
+     * @param line Строка, содержащая вещественное число.
+     * @throws NumberFormatException если строка не может быть преобразована в BigDecimal.
+     */
     public void updateStatistics(String line) {
         BigDecimal value = new BigDecimal(line);
         count++;
@@ -32,6 +49,9 @@ public class FloatStatistics implements StatisticsInterface{
         }
     }
 
+    /**
+     * Выводит статистику в консоль в зависимости от установленных флагов `shortStatistics` и `fullStatistics`.
+     */
     @Override
     public void printStatistics() {
         if (count == 0) return;
