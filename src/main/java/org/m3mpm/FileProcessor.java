@@ -160,6 +160,8 @@ public class FileProcessor {
         } catch (DataWriterException e) {
             hasErrors = true;
             System.err.println(e.getMessage());
+        } catch (NumberFormatException e){
+            System.err.println(e.getMessage());
         }
     }
 

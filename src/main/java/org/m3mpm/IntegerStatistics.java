@@ -37,18 +37,22 @@ public class IntegerStatistics implements StatisticsInterface{
      * @throws NumberFormatException если строка не может быть преобразована в BigInteger.
      */
     @Override
-    public void updateStatistics(String line) {
-        BigInteger value = new BigInteger(line);
-        count++;
-        sum = sum.add(value);
-        if (min == null && max == null) {
-            min = max = value;
-        }
-        if (value.compareTo(min) < 0) {
-            min = value;
-        }
-        if (value.compareTo(max) > 0) {
-            max = value;
+    public void updateStatistics(String line) throws NumberFormatException {
+        try {
+            BigInteger value = new BigInteger(line);
+            count++;
+            sum = sum.add(value);
+            if (min == null && max == null) {
+                min = max = value;
+            }
+            if (value.compareTo(min) < 0) {
+                min = value;
+            }
+            if (value.compareTo(max) > 0) {
+                max = value;
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("ERROR: Некорректный тип данны: " + line);
         }
     }
 

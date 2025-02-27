@@ -32,20 +32,24 @@ public class FloatStatistics implements StatisticsInterface{
      * Обновляет статистику на основе входной строки, представляющей вещественное число.
      *
      * @param line Строка, содержащая вещественное число.
-     * @throws NumberFormatException если строка не может быть преобразована в BigDecimal.
+     * @throws IllegalArgumentException если строка не может быть преобразована в BigDecimal.
      */
-    public void updateStatistics(String line) {
-        BigDecimal value = new BigDecimal(line);
-        count++;
-        sum = sum.add(value);
-        if (min == null && max == null) {
-            min = max = value;
-        }
-        if (value.compareTo(min) < 0) {
-            min = value;
-        }
-        if (value.compareTo(max) > 0) {
-            max = value;
+    public void updateStatistics(String line) throws NumberFormatException {
+        try {
+            BigDecimal value = new BigDecimal(line);
+            count++;
+            sum = sum.add(value);
+            if (min == null && max == null) {
+                min = max = value;
+            }
+            if (value.compareTo(min) < 0) {
+                min = value;
+            }
+            if (value.compareTo(max) > 0) {
+                max = value;
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("ERROR: Некорректный тип данны: " + line);
         }
     }
 
