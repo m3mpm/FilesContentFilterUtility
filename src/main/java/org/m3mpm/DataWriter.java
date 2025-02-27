@@ -24,27 +24,28 @@ public class DataWriter {
     public void writeToFile(String line, String type) throws DataWriterException {
         try {
             switch (type) {
-                case "int":
+                case "int" -> {
                     if (intWriter == null) {
                         intWriter = new BufferedWriter(new FileWriter(integersFile, writeMode));
                     }
                     intWriter.write(line);
                     intWriter.newLine();
-                    break;
-                case "float":
+                }
+                case "float" -> {
                     if (floatWriter == null) {
                         floatWriter = new BufferedWriter(new FileWriter(floatsFile, writeMode));
                     }
                     floatWriter.write(line);
                     floatWriter.newLine();
-                    break;
-                case "string":
+                }
+                case "string" -> {
                     if (stringWriter == null) {
                         stringWriter = new BufferedWriter(new FileWriter(stringsFile, writeMode));
                     }
                     stringWriter.write(line);
                     stringWriter.newLine();
-                    break;
+                }
+                default -> throw new DataWriterException("ERROR: Неизвестный тип данных: " + type);
             }
         } catch (IOException e) {
             throw new DataWriterException("ERROR: Ошибка при записи в файл: " + type);
