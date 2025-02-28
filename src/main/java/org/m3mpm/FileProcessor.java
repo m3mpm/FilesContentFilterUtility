@@ -83,7 +83,7 @@ public class FileProcessor {
                     System.err.println(e.getMessage());
                 }
             } else {
-                System.err.println("ERROR: Неверно указан путь: " + outputPath);
+                System.err.println("ERROR: Неверно указан путь для сохранения выходных файлов: " + outputPath);
             }
         } else {
             System.err.println("ERROR: Входные файлы не указаны!");
@@ -95,10 +95,26 @@ public class FileProcessor {
      */
     private void processArgs(){
         for (int i = 0; i < args.length; i++) {
-            if ("-o".equals(args[i]) && i + 1 < args.length) {
-                outputPath = args[++i];
-            } else if ("-p".equals(args[i]) && i + 1 < args.length) {
-                prefix = args[++i];
+            if ("-o".equals(args[i])) {
+                if (i + 1 < args.length){
+                    if (!args[i + 1].startsWith("-") && args[i + 1].startsWith("/")) {
+                        outputPath = args[++i];
+                    } else {
+                        System.err.println("ERROR: Не указан путь для сохранения выходных файлов");
+                    }
+                } else {
+                    System.err.println("ERROR: Не указан путь для сохранения выходных файлов");
+                }
+            } else if ("-p".equals(args[i])) {
+                if (i + 1 < args.length){
+                    if (!args[i + 1].startsWith("-")) {
+                        prefix = args[++i];
+                    } else {
+                        System.err.println("ERROR: Не указан префикс для выходных файлов");
+                    }
+                } else {
+                    System.err.println("ERROR: Не указан префикс для выходных файлов");
+                }
             } else if ("-a".equals(args[i])) {
                 writeMode = true;
             } else if("-s".equals(args[i])) {
