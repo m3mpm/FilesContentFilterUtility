@@ -27,9 +27,10 @@ public class FileProcessor {
     private List<String> inputFiles = new ArrayList<>();
 
     // Объекты для сбора статистики
-    IntegerStatistics integerStatistics = null;
-    FloatStatistics floatStatistics = null;
+    NumericStatistics integerStatistics = null;
+    NumericStatistics floatStatistics = null;
     StringStatistics stringStatistics = null;
+
     boolean hasErrors = false;
 
     // Объект для записи данных в файлы
@@ -61,9 +62,9 @@ public class FileProcessor {
                 String stringsFile = Paths.get(outputPath, prefix + "strings.txt").normalize().toString();
 
                 // Создание объектов для статистики
-                integerStatistics = new IntegerStatistics(shortStatistics, fullStatistics);
-                floatStatistics = new FloatStatistics(shortStatistics, fullStatistics);
-                stringStatistics = new StringStatistics(shortStatistics, fullStatistics);
+                integerStatistics = new NumericStatistics(shortStatistics, fullStatistics, "целым числам");
+                floatStatistics = new NumericStatistics(shortStatistics, fullStatistics, "вещественным числам");
+                stringStatistics = new StringStatistics(shortStatistics,fullStatistics);
 
                 // Создание объекта DataWriter для записи в файлы
                 dataWriter = new DataWriter(integersFile, floatsFile, stringsFile, writeMode);
