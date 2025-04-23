@@ -117,20 +117,4 @@ class GenericStatistics<T> implements StatisticsInterface {
         return sum.divide(BigDecimal.valueOf(count), MATH_CONTEXT).setScale(NUMBER_DIGITS_AFTER_POINT, RoundingMode.HALF_UP);
     }
 
-    /**
-     * Преобразует значение типа T в объект BigDecimal.
-     *
-     * @param value значение, которое нужно преобразовать
-     * @return объект BigDecimal, представляющий переданное значение
-     * @throws IllegalArgumentException если тип значения не поддерживается (не Integer или Float)
-     */
-    private BigDecimal getBigDecimal(T value) {
-        if (value instanceof Integer) {
-            return BigDecimal.valueOf((Integer) value);
-        } else if (value instanceof Float) {
-            return BigDecimal.valueOf((Float) value);
-        } else {
-            throw new IllegalArgumentException("Unsupported type for sum: " + value.getClass());
-        }
-    }
 }
